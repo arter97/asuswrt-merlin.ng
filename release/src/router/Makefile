@@ -1468,6 +1468,8 @@ obj-y += wsdd2
 ifeq ($(HND_ROUTER),y)
 obj-y += jitterentropy-rngd
 endif
+#obj-y += haveged
+
 #obj-$(RTCONFIG_BWDPI) += faketc
 
 ifneq ($(HND_ROUTER),y)
@@ -7755,6 +7757,23 @@ jitterentropy-rngd:
 jitterentropy-rngd-install:
 	install -D jitterentropy-rngd/jitterentropy-rngd $(INSTALLDIR)/jitterentropy-rngd/usr/sbin/jitterentropy-rngd
 	$(STRIP) $(INSTALLDIR)/jitterentropy-rngd/usr/sbin/jitterentropy-rngd
+
+haveged/Makefile:
+	cd haveged && autoreconf -fi && CFLAGS="-Wall -Os $(EXTRACFLAGS) -ffunction-sections -fdata-sections" \
+	LDFLAGS="-ffunction-sections -fdata-sections -Wl,--gc-sections" \
+	$(CONFIGURE) --prefix=/usr --enable-static --disable-shared --enable-daemon
+
+haveged: haveged/Makefile
+	@$(SEP)
+	$(MAKE) -C $@
+
+haveged-install:
+	install -D haveged/src/haveged $(INSTALLDIR)/haveged/usr/sbin/haveged
+	$(STRIP) $(INSTALLDIR)/haveged/usr/sbin/haveged
+
+haveged-clean:
+	[ ! -f haveged/Makefile ] || $(MAKE) -C haveged clean
+	@rm -f haveged/Makefile
 
 wsdd2:
 	@$(SEP)
