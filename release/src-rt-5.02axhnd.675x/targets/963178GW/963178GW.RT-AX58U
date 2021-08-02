@@ -349,7 +349,7 @@ BUILD_TMCTL=y
 # BUILD_DPI is not set
 BUILD_MAP=y
 BRCM_DRIVER_MAP=m
-BUILD_MPTCP=y
+# BUILD_MPTCP is not set
 
 #
 # Datapath
